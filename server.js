@@ -21,6 +21,20 @@ function addTask(task, succesCallback, errorCallback) {
     });
 }
 
+function deleteTask(theId, succesCallback, errorCallback) {
+    MongoClient.connect(mongoURL, function(err, db) {
+      if (err) throw err;
+      var dbo = db.db("evildice");
+      dbo.collection("memtasks").remove({_id: {$eq: theId}}, function(err, res) {
+        if (err) {
+            errorCallback();
+        }
+        console.log("1 document deleted");
+        db.close();
+        succesCallback();
+      });
+    });
+}
 
 function getAllTasks(successCallback, errorCallback) {
     MongoClient.connect(mongoURL, function(err, db) {
@@ -94,5 +108,14 @@ server.post('/tasks/add', function(req, res) {
        res.json({result: 'OK', message: 'Task added'});
    }, function () {
        res.json({result: 'Error', message: 'MongoDB Error while adding a task'});
+   });
+});
+
+server.post('/tasks/delete', function(req, res) {
+   console.log(req.headers.id);
+   deleteTask(req.headers.id, function(){
+       res.json({result: 'OK', message: 'Task removed'});
+   }, function () {
+       res.json({result: 'Error', message: 'MongoDB Error while deleting a task'});
    });
 });

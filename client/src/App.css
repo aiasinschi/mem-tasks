@@ -44,6 +44,8 @@
     padding: 3px 3px 3px 3px;
     border: 1px solid black;
     font-weight: bold;
+    color: white;
+    background: #555555;
 }
 
 .tableStyle {
@@ -55,7 +57,7 @@
 .buttonStyle {
     border: 1px solid black;
     border-radius: 3px;
-    width: 100px;
+    max-width: 100px;
     margin: auto;
     cursor: pointer;
     margin-top: 3px;

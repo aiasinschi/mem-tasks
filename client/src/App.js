@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import Task from './Task.js';
 
 class App extends Component {
 
@@ -59,6 +60,10 @@ class App extends Component {
     return body;
   }
 
+  reloadApp() {
+      this.componentDidMount();
+  }
+
   addNewTask = async () => {
       const response = await fetch('tasks/add', {
           method: 'post',
@@ -75,8 +80,24 @@ class App extends Component {
       const body = await response.json();
       // maybe use the body somehow to inform the user about the result...
       if (response.status !== 200) throw Error(body.message);
-      this.componentDidMount();
+      this.reloadApp();
       this.resetNewTaskFields();
+      return body;
+  }
+
+  removeTask = async (id) => {
+      const response = await fetch('tasks/delete', {
+          method: 'post',
+          headers: {
+              'Accept': 'application/json, text/plain, */*',
+              'Content-type': 'application/json',
+              'id': id
+          }
+      });
+      const body = await response.json();
+      // maybe use the body somehow to inform the user about the result...
+      if (response.status !== 200) throw Error(body.message);
+      this.reloadApp();
       return body;
   }
 
@@ -94,16 +115,21 @@ class App extends Component {
                 <div className="headerStyle"> Name </div>
                 <div className="headerStyle"> Priority</div>
                 <div className="headerStyle"> Category</div>
+                <div className="headerStyle"> Action </div>
             </div>
-          {this.state.response.map(function(task, index) {
-                return (
+          {this.state.response.map((function(task, index) {
+                return <Task key={task._id} removeTask={this.removeTask} task={task}></Task>
+                /*(
                     <div key={task._id} className="rowStyle" style={{background: task.color}}>
                         <div className="cellStyle"> {task.name} </div>
                         <div className="cellStyle"> {task.priority} </div>
                         <div className="cellStyle"> {task.category} </div>
+                        <div className="cellStyle">
+                           <div class="buttonStyle" onClick={this.removeTask(task._id)}>-</div>
+                        </div>
                     </div>
-                    )
-            })}
+                    )*/
+            }).bind(this))}
           </div>
           <h3>Add new task</h3>
           <div className="tableStyle">
