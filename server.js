@@ -2,6 +2,7 @@ const http = require("http");
 const express = require('express');
 const mongoURL = 'mongodb://evildice:r3v3ng3@ds129090.mlab.com:29090/evildice';
 const server = express();
+const THE_PORT = 5000;
 
 const MongoClient = require('mongodb').MongoClient;
 
@@ -60,9 +61,9 @@ server.get('/', function (req, res) {
     res.sendFile(path.resolve(__dirname + '/index.html'));
 });
 
-server.listen(80, (err) => {
+server.listen(THE_PORT, (err) => {
 	if ( ! err) {
-		console.log(`server is listening on 80`)
+		console.log(`server is listening on ` + THE_PORT)
 	}
 });
 
